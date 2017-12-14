@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 1500px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }  
+  </style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+      <h4>My Blog</h4>
+      <input type="text" name="postid" id ="postid">
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="#" onclick="actions.countByOne()">Show post for id</a></li>
+      </ul><br>
+    </div>
+    <div class="col-sm-9">
+      <h4><small>Post ID: <span id="show-id"></span></small></h4>
+      <hr>
+      <h2></h2>     
+       <strong>Title:</strong><p id="show-title"></p><br>
+       <strong>Body:</strong><p id="show-body"></p><br>
+       <strong>UserId:</strong><p id="show-userid"></p><br>
+      <br><br>
+    </div>
+  </div>
+</div>
+</body>
+<script type="text/javascript">
+	let actions = {
+  	countByOne() {
+    model.accept({ id: document.getElementById("postid").value })
+  }
+};
+
+let model = {
+  comments: '',
+  accept(proposal) {
+     var session = $.get("https://jsonplaceholder.typicode.com/posts/" + proposal.id );
+        session.done(function (result) {
+        this.comments = result;
+        state.render(this).then(state.nap)
+    });
+  }
+};
+
+let state = {
+  render(model) {
+      return new Promise( function(resolve ) {
+        document.getElementById("show-id").innerHTML = model.comments.id
+        document.getElementById("show-title").innerHTML = model.comments.title 
+        document.getElementById("show-body").innerHTML = model.comments.body
+        document.getElementById("show-userid").innerHTML = model.comments.userId
+        resolve(model)
+    })
+  }, 
+  
+  nap(model) {
+    return false
+  }
+}
+
+
+
+</script>
+</html>
